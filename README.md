@@ -1,7 +1,7 @@
 # 🦈 Poolshark FIN Token 🦈
 A fungible token to distribute on-chain rewards for Poolshark.
 
-An implementation of xERC20 using Solady's ERC-20 as a base. 
+This token is an implementation of xERC20 using Solady's ERC-20 as a base. 
 
 This follows the specification detailed in the [ERC-7281 Ethereum Magicians post](https://ethereum-magicians.org/t/erc-7281-sovereign-bridged-tokens/14979).
 
