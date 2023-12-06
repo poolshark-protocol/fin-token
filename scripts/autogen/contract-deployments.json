@@ -1,0 +1,46 @@
+{
+    "arb_goerli": {
+        "finToken": {
+            "contractName": "FIN",
+            "contractAddress": "0x7595aaef5d61f649ddeb86142ee11a8500047865",
+            "constructorArguments": [
+                "0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E"
+            ],
+            "created": "2023-12-06T02:51:15.308Z"
+        }
+    },
+    "scrollSepolia": {
+        "finToken": {
+            "contractName": "FIN",
+            "contractAddress": "0x125d13b5245127b97d44ac2f7b819763e2a190be",
+            "constructorArguments": [
+                "Poolshark",
+                "FIN",
+                "0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E"
+            ],
+            "created": "2023-12-06T02:19:14.311Z"
+        }
+    },
+    "undefined": {
+        "finToken": {
+            "contractName": "FIN",
+            "contractAddress": "0xad66d1dd5da0e2302c2aba3ab72440b3dc37dae8",
+            "constructorArguments": [
+                "Poolshark",
+                "FIN",
+                "0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E"
+            ],
+            "created": "2023-12-06T02:17:37.490Z"
+        }
+    },
+    "arb_one": {
+        "finToken": {
+            "contractName": "FIN",
+            "contractAddress": "0x85023692e5fff6531004130c0f01046aab816c53",
+            "constructorArguments": [
+                "0x7243dBE9de12368D07E4F2d037176817136aeF7b"
+            ],
+            "created": "2023-12-06T04:39:44.820Z"
+        }
+    }
+}
