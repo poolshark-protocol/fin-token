@@ -1,25 +1,22 @@
-# 🦈 Poolshark Limit Contracts 🦈
-A liquidity pool to support one-way and two-way liquidity positions.
+# 🦈 Poolshark FIN Token 🦈
+A fungible token to distribute on-chain rewards for Poolshark.
 
-An implementation of Limit, a limit order liquidity pool, written in Solidity. 
+An implementation of xERC20 using Solady's ERC-20 as a base implementation. 
 
-This follows the specification detailed in the [Poolshark whitepaper](https://docs.poolsharks.io/whitepaper/).
+This follows the specification detailed in the [ERC-7281 Ethereum Magicians post](https://ethereum-magicians.org/t/erc-7281-sovereign-bridged-tokens/14979).
 
 ### What's New 
-The concept of "claim ticks" are introduced to inform up to what price tick a user has been filled.
+xERC20s are natively crosschain without compromises. This makes your token:
 
-Each tick will have an `epoch` that is marked as ticks are crossed.
-
-This will allow the smart contracts to verify the correct claim tick.
+* Transferrable across chains with no slippage.
+* Deployed and fully controlled by you, the token issuer, including the ability to set rate limits on a per-bridge basis.
 
 ### Installation
 ```
-git clone https://github.com/poolshark-protocol/cover
-cd cover
+git clone https://github.com/poolshark-protocol/fin-token
+cd fin-token
 yarn install
 ```
-
-This repo makes full use of Echidna's assertion testing to fully test and analyze the Limit smart contracts.
 
 ### Testing
 Tests can be run via the following commands.
@@ -36,65 +33,11 @@ Contracts can be deployed onto Arbitrum Goerli using the deploy script:
 npx hardhat deploy-coverpools --network arb_goerli
 ```
 
-### Contracts
-#### Limit Pool
-Limit Pool is the liquidity pool contract which contains all the calls for the pool. 
-<br/><br/>
-Outside of the claim process, it is a relatively simple AMM liquidity pool which uses a both a tick bitmap to find ticks to cross and an epoch map to store epochs for any positions boundaries of Limit LPs. Positions are implemented via an ERC-1155 for transferability and composability.
-<br/><br/>
-The contracts are implemented with extremely limited admin functionality, namely modifying fees up to a defined ceiling of 1% and adding new fee tiers.
-<br/><br/>
-Limit Pools utilize epochs to determine to what tick in the user's position range they have been filled. A `fillFee` can be turned on by the protocol if desired, taking a portion of any filled positions amounts and directing that to a chosen `feeTo` address. If ever a pool were to ever require an extensive sync, a user burning a position could simply skip the syncing process by passing `sync = true`.
-
 #### Supported Interfaces
-_ERC-165: Standard Interface Detection_
 
-_ERC-1155: Multi Token Standard_
+_ERC-20: Token Standard_
 
-#### Cover Pool Factory
-The factory which handles the deployment of new Limit Pools. The factory works by cloning the implementation contract to match a given Limit pool type. Each pool type has its own unique implementation, which can have varying details such as AMM curve math (i.e. Constant Product, Constant Sum, etc.), or other unique design choices.
+_ERC-2612: Permit Extension for EIP-20 Signed Approvals_
 
-##### Supported Interfaces
-_ERC-1167: Minimal Proxy Contract_
+_ERC-7281: Sovereign Bridged Tokens_
 
-### Testing Design
-#### Coverage
-##### ERC-1155 Functions
-
-totalSupply
-<br/>
-balanceOf
-<br/>
-transfer
-<br/>
-transferFrom
-<br/>
-approve
-<br/>
-allowance
-<br/>
-##### General Functions
-
-mintLimit
-<br/>
-mintRange
-<br/>
-burnLimit
-<br/>
-burnRange
-<br/>
-swap
-<br/>
-quote
-<br/>
-snapshotLimit
-<br/>
-snapshotRange
-<br/>
-immutables
-<br/>
-priceBounds
-
-### Limit LP Visual Diagram
-
-![image](https://github.com/poolshark-protocol/limit/assets/84204260/c82cfc21-f559-452b-864d-5ba6e24992d2)
