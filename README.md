@@ -41,13 +41,6 @@ _ERC-2612: Permit Extension for EIP-20 Signed Approvals_
 
 _ERC-7281: Sovereign Bridged Tokens_
 
-#### Safety
-This is experimental software and is provided on an "as is" and "as available" basis.
-
-We do not give any warranties and will not be liable for any loss incurred through any use of this codebase.
-
-Please always include your own thorough tests to make sure this repository works correctly with your code.
-
 #### EVM Compatibility
 Some parts of this repository may not be compatible with chains with partial EVM equivalence.
 
