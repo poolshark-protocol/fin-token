@@ -3,7 +3,7 @@ A fungible token to distribute on-chain rewards for Poolshark.
 
 This token is an implementation of xERC20 using Solady's ERC-20 as a base. 
 
-This follows the specification detailed in the [ERC-7281 Ethereum Magicians post](https://ethereum-magicians.org/t/erc-7281-sovereign-bridged-tokens/14979).
+The specification for xERC20 is detailed in the [ERC-7281 Ethereum Magicians post](https://ethereum-magicians.org/t/erc-7281-sovereign-bridged-tokens/14979) by Arjun Bhuptani.
 
 ### What's New 
 xERC20s are natively crosschain without compromises. This makes your token:
