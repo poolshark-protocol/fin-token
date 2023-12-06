@@ -30,7 +30,7 @@ yarn test
 
 Contracts can be deployed onto Arbitrum Goerli using the deploy script:
 ```
-npx hardhat deploy-coverpools --network arb_goerli
+npx hardhat deploy-fintoken --network arb_goerli
 ```
 
 #### Supported Interfaces
