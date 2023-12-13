@@ -24,11 +24,11 @@
     "arb_one": {
         "finToken": {
             "contractName": "FIN",
-            "contractAddress": "0x85023692e5fff6531004130c0f01046aab816c53",
+            "contractAddress": "0x903ca00944d0b51e50d9f4fc96167c89f211542a",
             "constructorArguments": [
-                "0x7243dBE9de12368D07E4F2d037176817136aeF7b"
+                "0xf37A475c178dfbEC96088FA7904a861336002c6a"
             ],
-            "created": "2023-12-06T04:39:44.820Z"
+            "created": "2023-12-11T13:42:55.900Z"
         }
     }
 }

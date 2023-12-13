@@ -22,7 +22,7 @@ export class InitialSetup {
         'hardhat': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'scrollSepolia': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'arb_goerli': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
-        'arb_one': '0x7243dBE9de12368D07E4F2d037176817136aeF7b',
+        'arb_one': '0xf37A475c178dfbEC96088FA7904a861336002c6a',
     }
 
     constructor() {
