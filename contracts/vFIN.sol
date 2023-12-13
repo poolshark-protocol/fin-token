@@ -187,4 +187,26 @@ contract vFIN is ERC721, Ownable {
 
     IBondFixedTermTeller(tellerAddress).redeem(tellerTokenId, finBondBalance);
   }
+
+  function withdraw() external onlyOwner() {
+    // Checks: revert if vest not started
+    if (!vestState.started) require(false, "VestingNotStarted()");
+
+    uint256 finBondBalance = ERC1155(tellerAddress).balanceOf(address(this), tellerTokenId);
+
+    if (finBondBalance == 0) require(false, "FINBondBalanceZero()");
+
+    ERC1155(tellerAddress).safeTransferFrom(address(this), owner, tellerTokenId, finBondBalance, bytes(""));
+  }
+
+  function viewClaim(uint32 positionId) external view returns (uint256 vestedAmount) {
+
+    // load vested position
+    VestPosition memory vestPosition = vestPositions[positionId];
+
+    // calculate vested amount
+    vestedAmount = vestPosition.amount
+                    * (block.timestamp - vestPosition.lastClaimTimestamp)
+                    / (vestEndTime - vestStartTime);
+  }
 }
