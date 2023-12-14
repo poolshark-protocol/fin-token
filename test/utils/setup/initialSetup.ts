@@ -22,7 +22,6 @@ export class InitialSetup {
     private deployVesting = true
 
     private owner = {
-        'hardhat': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'scrollSepolia': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'arb_goerli': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'arb_one': '0xf37A475c178dfbEC96088FA7904a861336002c6a',
@@ -34,6 +33,10 @@ export class InitialSetup {
         'arb_goerli': '0x007F7735baF391e207E3aA380bb53c4Bd9a5Fed6',
         'arb_one': '0x007F7735baF391e207E3aA380bb53c4Bd9a5Fed6',
     }
+
+    private startTime = 1702314000 // Dec 11th, 2023 @ 5pm UTC
+
+    private endTime = 1707498000   // Feb 9th, 2024 @ 5pm UTC
 
     private bondTotalSupply = "149999999999999999999927";
 
@@ -101,13 +104,11 @@ export class InitialSetup {
             network,
             //@ts-ignore
             VFIN__factory,
-            'vFIN',
+            'vFin',
             [
-                this.owner[hre.network.name],
+                this.owner[hre.network.name] ?? hre.props.admin.address,
                 hre.props.finToken.address,
-                tellerAddress,
-                0,
-                4e9
+                tellerAddress
             ]
         )
 

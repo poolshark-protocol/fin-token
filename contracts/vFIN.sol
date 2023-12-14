@@ -7,6 +7,7 @@ import {ERC20} from './external/solady/ERC20.sol';
 import {Ownable} from '../lib/openzeppelin-contracts/contracts/access/Ownable.sol';
 import {SafeCast} from './libraries/utils/SafeCast.sol';
 import {IBondFixedTermTeller} from './interfaces/bond/IBondFixedTermTeller.sol';
+import 'hardhat/console.sol';
 
 contract vFIN is ERC721, Ownable {
 
@@ -35,12 +36,12 @@ contract vFIN is ERC721, Ownable {
   /**
    * @notice The start block.timestamp of the vest
    */
-  uint256 public immutable vestStartTime;
+  uint256 public constant vestStartTime = 1702314000; // Dec 11th, 2023 @ 5pm UTC
 
   /**
    * @notice The end block.timestamp of the vest
    */
-  uint256 public immutable vestEndTime;
+  uint256 public immutable vestEndTime = 1707498000; // Feb 9th, 2024 @ 5pm UTC
 
   struct VestState {
     uint32 idNext;
@@ -66,16 +67,12 @@ contract vFIN is ERC721, Ownable {
   constructor(
     address _owner,
     address _finAddress,
-    address _tellerAddress,
-    uint32 _vestStartTime,
-    uint32 _vestEndTime
+    address _tellerAddress
   ) ERC721() {
     _transferOwnership(_owner);
-    owner = _owner;
+    console.log(block.timestamp, vestStartTime, vestEndTime);
     finAddress = _finAddress;
     tellerAddress = _tellerAddress;
-    vestStartTime = _vestStartTime;
-    vestEndTime = _vestEndTime;
     vestState.idNext = 1;
   }
     
@@ -91,7 +88,7 @@ contract vFIN is ERC721, Ownable {
 
   function tokenURI(uint256 id) public pure override returns (string memory) {}
 
-  function createLinearVest() external onlyOwner() {
+  function startLinearVest() external onlyOwner() {
     // only create vest once
     if (vestState.started) require(false, "VestingAlreadyStarted()");
     // transfer from owner
@@ -100,7 +97,7 @@ contract vFIN is ERC721, Ownable {
     vestState.started = true;
   }
 
-  function exchangeBond(address to, uint256 amount, uint32 positionId) external {
+  function exchangeBond(uint256 amount, uint32 positionId) external {
     // Checks: revert if vest not started
     if (!vestState.started)
       require(false, "VestingNotStarted()");
@@ -108,6 +105,7 @@ contract vFIN is ERC721, Ownable {
       require(false, "VestingAlreadyComplete()");
     }
     // Interactions: transfer FIN bond from user
+    console.log('erc1155 transfer');
     ERC1155(tellerAddress).safeTransferFrom(
       msg.sender,
       address(this),
@@ -115,45 +113,46 @@ contract vFIN is ERC721, Ownable {
       amount,
       bytes("")
     );
-    VestPosition memory vestPosition;
+    console.log('after erc1155 transfer');
+    VestPosition memory vest;
 
     if (positionId == 0) {
       // mint new position
       positionId = vestState.idNext;
-      _mint(to, vestState.idNext);
+      _mint(msg.sender, vestState.idNext);
       ++vestState.idNext;
-      vestPosition.lastClaimTimestamp = uint32(vestStartTime);
+      vest.lastClaimTimestamp = uint32(vestStartTime);
     } else {
       // load existing position
-      if (ownerOf(positionId) != to)
+      if (ownerOf(positionId) != msg.sender)
         require (false, "PositionOwnerMismatch()");
-      vestPosition = vestPositions[positionId];
+      vest = vestPositions[positionId];
     }
 
     // calculate initial vested amount
-    uint256 vestedAmount = amount
-                            * (block.timestamp - vestStartTime)
-                            / (vestEndTime - vestStartTime);
+    uint256 vestedAmount = _calculateVestedInitial(amount);
+    console.log('vested amount:', vestedAmount, block.timestamp);
                   
-    if (vestPosition.amount > 0) {
+    if (vest.amount > 0) {
       // calculate previous vested amount 
-      vestedAmount += vestPosition.amount
-                        * (block.timestamp - vestPosition.lastClaimTimestamp)
-                        / (vestEndTime - vestStartTime);
+      vestedAmount += _calculateVestedAmount(vest);
     }
 
     // transfer out vested amount
-    ERC20(finAddress).transfer(to, vestedAmount);
+    ERC20(finAddress).transfer(msg.sender, vestedAmount);
 
-    // update vest position
-    vestPosition.amount += amount.toUint128();
-    vestPosition.lastClaimTimestamp = uint32(block.timestamp);
+    // Effects: update vest
+    vest.amount += amount.toUint128();
+    uint256 vestCurrentTime = block.timestamp <= vestEndTime
+                                ? block.timestamp
+                                : vestEndTime;
+    vest.lastClaimTimestamp = uint32(vestCurrentTime);
 
     // save to storage
-    vestPositions[positionId] = vestPosition;
+    vestPositions[positionId] = vest;
   }
 
-  function claim(address to, uint32 positionId) external {
+  function claim(uint32 positionId) external {
     // Checks: revert if vest not started
     if (!vestState.started) require(false, "VestingNotStarted()");
     // Checks: revert if owner not msg.sender
@@ -161,23 +160,19 @@ contract vFIN is ERC721, Ownable {
         require (false, "PositionOwnerMismatch()");
 
     // load vested position
-    VestPosition memory vestPosition = vestPositions[positionId];
+    VestPosition memory vest = vestPositions[positionId];
 
-    // Checks: vest ends at vestEndTime
+    // calculate vested amount
+    uint256 vestedAmount = _calculateVestedAmount(vest);
+
+    // Effects: update vest
     uint256 vestCurrentTime = block.timestamp <= vestEndTime
                                 ? block.timestamp
                                 : vestEndTime;
-
-    // calculate vested amount
-    uint256 vestedAmount = vestPosition.amount
-                            * (vestCurrentTime - vestPosition.lastClaimTimestamp)
-                            / (vestEndTime - vestStartTime);
-
-    // Effects: update vest
-    vestPosition.lastClaimTimestamp = uint32(block.timestamp);
+    vest.lastClaimTimestamp = uint32(vestCurrentTime);
 
     // Effects: save to storage
-    vestPositions[positionId] = vestPosition;
+    vestPositions[positionId] = vest;
 
     // Effects: burn NFT after full vest
     if (uint32(block.timestamp) >= vestEndTime) {
@@ -185,7 +180,7 @@ contract vFIN is ERC721, Ownable {
     }
 
     // Interactions: transfer out vested amount
-    ERC20(finAddress).transfer(to, vestedAmount);
+    ERC20(finAddress).transfer(msg.sender, vestedAmount);
   }
 
   function redeem() external onlyOwner() {
@@ -200,6 +195,7 @@ contract vFIN is ERC721, Ownable {
       // Interactions: redeem bond
       IBondFixedTermTeller(tellerAddress).redeem(BOND_TOKEN_ID, finBondBalance);
       ERC20(finAddress).transfer(owner, finBondBalance);
+      console.log('fin bond balance', finBondBalance);
     }
 
     // Interactions: transfer remaining FIN out
@@ -231,13 +227,57 @@ contract vFIN is ERC721, Ownable {
   }
 
   function viewClaim(uint32 positionId) external view returns (uint256 vestedAmount) {
+    // load vested position and calculate vested amount
+    return _calculateVestedAmount(vestPositions[positionId]);
+  }
 
-    // load vested position
-    VestPosition memory vestPosition = vestPositions[positionId];
+  function supportsInterface(bytes4 interfaceId)
+      public
+      pure
+      override
+      returns (bool)
+  {
+      return
+          interfaceId == 0x01ffc9a7 || // ERC-165 support
+          interfaceId == 0x80ac58cd || // ERC-271 support
+          interfaceId == 0x5b5e139f || // ERC-721Metadata support
+          interfaceId == 0xd9b67a26; // ERC-1155 support
+  }
+
+  function onERC1155Received(
+      address operator,
+      address from,
+      uint256 id,
+      uint256 value,
+      bytes calldata data
+  ) external view returns (bytes4) {
+    console.log('1155 received');
+    operator; from; id; value; data;
+    return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+  }
+
+  function _calculateVestedAmount(VestPosition memory vest) private view returns (uint256 vestedAmount) {
+    
+    // Checks: vest ends at vestEndTime
+    uint256 vestCurrentTime = block.timestamp <= vestEndTime
+                                ? block.timestamp
+                                : vestEndTime;
 
     // calculate vested amount
-    vestedAmount = vestPosition.amount
-                    * (block.timestamp - vestPosition.lastClaimTimestamp)
+    vestedAmount = vest.amount
+                    * (vestCurrentTime - vest.lastClaimTimestamp)
+                    / (vestEndTime - vestStartTime);
+  }
+
+  function _calculateVestedInitial(uint256 amount) private view returns (uint256 vestedInitial) {
+    // Checks: vest ends at vestEndTime
+    uint256 vestCurrentTime = block.timestamp <= vestEndTime
+                                ? block.timestamp
+                                : vestEndTime;
+
+    // calculate vested amount
+    vestedInitial = amount
+                    * (vestCurrentTime - vestStartTime)
                     / (vestEndTime - vestStartTime);
   }
 }
