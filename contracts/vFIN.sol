@@ -13,6 +13,16 @@ contract vFIN is ERC721, Ownable {
   using SafeCast for uint256;
 
   /**
+   * @notice The total supply of the FIN bond
+   */
+  uint256 public constant BOND_TOTAL_SUPPLY = 149999999999999999999927;
+  
+  /**
+   * @notice The token id of the FIN bond
+   */
+  uint256 public constant BOND_TOKEN_ID = 50041069287616932026042816520963973508955622977186811114648766172172485699723;
+
+  /**
    * @notice The max total supply of the token
    */
   address public immutable finAddress;
@@ -21,16 +31,6 @@ contract vFIN is ERC721, Ownable {
    * @notice The minter of the FIN bond
    */
   address public immutable tellerAddress;
-
-  /**
-   * @notice The token id of the FIN bond
-   */
-  uint256 public immutable tellerTokenId;
-
-  /**
-   * @notice The total FIN amount to be vested
-   */
-  uint256 public immutable vestAmount;
 
   /**
    * @notice The start block.timestamp of the vest
@@ -45,6 +45,8 @@ contract vFIN is ERC721, Ownable {
   struct VestState {
     uint32 idNext;
     bool started;
+    bool ended;
+    bool withdrawn;
   }
 
   struct VestPosition {
@@ -60,14 +62,11 @@ contract vFIN is ERC721, Ownable {
    * @notice Constructs the initial config of the vFIN contract
    *
    * @param _owner The owner which can redeem exchanged bonds
-   * @param _vestAmount The total amount of FIN vested
    */
   constructor(
     address _owner,
     address _finAddress,
     address _tellerAddress,
-    uint256 _tellerTokenId,
-    uint256 _vestAmount,
     uint32 _vestStartTime,
     uint32 _vestEndTime
   ) ERC721() {
@@ -75,8 +74,6 @@ contract vFIN is ERC721, Ownable {
     owner = _owner;
     finAddress = _finAddress;
     tellerAddress = _tellerAddress;
-    tellerTokenId = _tellerTokenId;
-    vestAmount = _vestAmount;
     vestStartTime = _vestStartTime;
     vestEndTime = _vestEndTime;
     vestState.idNext = 1;
@@ -98,19 +95,23 @@ contract vFIN is ERC721, Ownable {
     // only create vest once
     if (vestState.started) require(false, "VestingAlreadyStarted()");
     // transfer from owner
-    ERC20(finAddress).transferFrom(msg.sender, address(this), vestAmount);
+    ERC20(finAddress).transferFrom(msg.sender, address(this), BOND_TOTAL_SUPPLY);
     // start vest
     vestState.started = true;
   }
 
   function exchangeBond(address to, uint256 amount, uint32 positionId) external {
     // Checks: revert if vest not started
-    if (!vestState.started) require(false, "VestingNotStarted()");
+    if (!vestState.started)
+      require(false, "VestingNotStarted()");
+    if (block.timestamp > vestEndTime) {
+      require(false, "VestingAlreadyComplete()");
+    }
     // Interactions: transfer FIN bond from user
     ERC1155(tellerAddress).safeTransferFrom(
       msg.sender,
       address(this),
-      tellerTokenId,
+      BOND_TOKEN_ID,
       amount,
       bytes("")
     );
@@ -144,7 +145,7 @@ contract vFIN is ERC721, Ownable {
     // transfer out vested amount
     ERC20(finAddress).transfer(to, vestedAmount);
 
-    // update vest
+    // update vest position
     vestPosition.amount += amount.toUint128();
     vestPosition.lastClaimTimestamp = uint32(block.timestamp);
 
@@ -162,9 +163,14 @@ contract vFIN is ERC721, Ownable {
     // load vested position
     VestPosition memory vestPosition = vestPositions[positionId];
 
+    // Checks: vest ends at vestEndTime
+    uint256 vestCurrentTime = block.timestamp <= vestEndTime
+                                ? block.timestamp
+                                : vestEndTime;
+
     // calculate vested amount
     uint256 vestedAmount = vestPosition.amount
-                            * (block.timestamp - vestPosition.lastClaimTimestamp)
+                            * (vestCurrentTime - vestPosition.lastClaimTimestamp)
                             / (vestEndTime - vestStartTime);
 
     // Effects: update vest
@@ -173,30 +179,55 @@ contract vFIN is ERC721, Ownable {
     // Effects: save to storage
     vestPositions[positionId] = vestPosition;
 
+    // Effects: burn NFT after full vest
+    if (uint32(block.timestamp) >= vestEndTime) {
+      _burn(positionId);
+    }
+
     // Interactions: transfer out vested amount
     ERC20(finAddress).transfer(to, vestedAmount);
   }
 
   function redeem() external onlyOwner() {
-    // Checks: revert if vest not started
-    if (!vestState.started) require(false, "VestingNotStarted()");
+    // Checks: revert if vest incomplete
+    if (!vestState.started || block.timestamp <= vestEndTime)
+      require(false, "VestingPeriodIncomplete()");
 
-    uint256 finBondBalance = ERC1155(tellerAddress).balanceOf(address(this), tellerTokenId);
+    // Checks: get FIN bond balance
+    uint256 finBondBalance = ERC1155(tellerAddress).balanceOf(address(this), BOND_TOKEN_ID);
 
-    if (finBondBalance == 0) require(false, "FINBondBalanceZero()");
+    if (finBondBalance > 0) { 
+      // Interactions: redeem bond
+      IBondFixedTermTeller(tellerAddress).redeem(BOND_TOKEN_ID, finBondBalance);
+      ERC20(finAddress).transfer(owner, finBondBalance);
+    }
 
-    IBondFixedTermTeller(tellerAddress).redeem(tellerTokenId, finBondBalance);
+    // Interactions: transfer remaining FIN out
+    if (!vestState.withdrawn) {
+      uint256 finToOwner = (BOND_TOTAL_SUPPLY - finBondBalance);
+      ERC20(finAddress).transfer(owner, finToOwner);
+      vestState.withdrawn = true;
+    }
   }
 
   function withdraw() external onlyOwner() {
-    // Checks: revert if vest not started
-    if (!vestState.started) require(false, "VestingNotStarted()");
+    // Checks: revert if vest incomplete
+    if (!vestState.started || block.timestamp <= vestEndTime)
+      require(false, "VestingPeriodIncomplete()");
 
-    uint256 finBondBalance = ERC1155(tellerAddress).balanceOf(address(this), tellerTokenId);
+    uint256 finBondBalance = ERC1155(tellerAddress).balanceOf(address(this), BOND_TOKEN_ID);
 
-    if (finBondBalance == 0) require(false, "FINBondBalanceZero()");
-
-    ERC1155(tellerAddress).safeTransferFrom(address(this), owner, tellerTokenId, finBondBalance, bytes(""));
+    if (finBondBalance > 0) {
+      // Interactions: transfer out FIN bonds
+      ERC1155(tellerAddress).safeTransferFrom(address(this), owner, BOND_TOKEN_ID, finBondBalance, bytes(""));
+    }
+    
+    // Interactions: transfer remaining FIN out
+    if (!vestState.withdrawn) {
+      uint256 finToOwner = (BOND_TOTAL_SUPPLY - finBondBalance);
+      ERC20(finAddress).transfer(owner, finToOwner);
+      vestState.withdrawn = true;
+    }
   }
 
   function viewClaim(uint32 positionId) external view returns (uint256 vestedAmount) {
