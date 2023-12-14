@@ -78,14 +78,14 @@ describe('vFIN Tests', function () {
         await expect(
             hre.props.vFin
               .connect(hre.props.bob)
-              .redeem()
+              .withdraw(true)
         ).to.be.revertedWith('Ownable: caller is not the owner')
         
         // withdraw bonds
         await expect(
             hre.props.vFin
               .connect(hre.props.bob)
-              .withdraw()
+              .withdraw(false)
         ).to.be.revertedWith('Ownable: caller is not the owner')
     })
 
@@ -183,12 +183,13 @@ describe('vFIN Tests', function () {
      
         let txn = await hre.props.vFin.connect(hre.props.bob).claim(1)
         await txn.wait();
+
+        // cannot redeem bonds until end of vesting
+        await expect(
+            hre.props.vFin.withdraw(true)
+        ).to.be.revertedWith('VestingPeriodIncomplete()')
     })
-    // view claim
 
-    // claim
-
-    // redeem
     it('Should advance time to end of vest and claim all FIN', async function () {
         // advance time by 8 weeks
         await time.increase(604800 * 10);
@@ -222,7 +223,9 @@ describe('vFIN Tests', function () {
 
         const finBalanceBefore = await hre.props.finToken.balanceOf(hre.props.admin.address)
         
-        await hre.props.vFin.redeem()
+        await hre.props.vFin.withdraw(true)
+
+        await hre.props.vFin.withdraw(false)
 
         const finBalanceAfter = await hre.props.finToken.balanceOf(hre.props.admin.address)
 
@@ -233,6 +236,5 @@ describe('vFIN Tests', function () {
     // withdraw
     // ensure constantly claiming does not pay out too much
     // transfer NFT and claim from new owner
-    // try to redeem before end of vesting
 
 })
