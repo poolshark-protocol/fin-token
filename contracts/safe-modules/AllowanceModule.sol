@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LGPL-3.0-only
-pragma solidity >=0.7.0 <0.8.0;
+pragma solidity 0.8.18;
 
 import "./Enum.sol";
 import "./SignatureDecoder.sol";
@@ -75,8 +75,8 @@ contract AllowanceModule is SignatureDecoder {
     function setAllowance(address delegate, address token, uint96 allowanceAmount, uint16 resetTimeMin, uint32 resetBaseMin) public {
         require(delegate != address(0), "delegate != address(0)");
         require(
-            delegates[msg.sender][uint48(delegate)].delegate == delegate,
-            "delegates[msg.sender][uint48(delegate)].delegate == delegate"
+            delegates[msg.sender][uint48(uint160(delegate))].delegate == delegate,
+            "delegates[msg.sender][uint48(uint160(delegate)].delegate == delegate"
         );
         Allowance memory allowance = getAllowance(msg.sender, delegate, token);
         if (allowance.nonce == 0) {
@@ -191,7 +191,7 @@ contract AllowanceModule is SignatureDecoder {
         if (payment > 0) {
             // Transfer payment
             // solium-disable-next-line security/no-tx-origin
-            transfer(safe, paymentToken, tx.origin, payment);
+            transfer(safe, paymentToken, payable(tx.origin), payment);
             // solium-disable-next-line security/no-tx-origin
             emit PayAllowanceTransfer(address(safe), delegate, paymentToken, tx.origin, payment);
         }
@@ -201,7 +201,7 @@ contract AllowanceModule is SignatureDecoder {
     }
 
     /// @dev Returns the chain id used by this contract.
-    function getChainId() public pure returns (uint256) {
+    function getChainId() public view returns (uint256) {
         uint256 id;
         // solium-disable-next-line security/no-inline-assembly
         assembly {
@@ -242,8 +242,8 @@ contract AllowanceModule is SignatureDecoder {
     function checkSignature(address expectedDelegate, bytes memory signature, bytes memory transferHashData, GnosisSafe safe) private view {
         address signer = recoverSignature(signature, transferHashData);
         require(
-            expectedDelegate == signer && delegates[address(safe)][uint48(signer)].delegate == signer,
-            "expectedDelegate == signer && delegates[address(safe)][uint48(signer)].delegate == signer"
+            expectedDelegate == signer && delegates[address(safe)][uint48(uint160(signer))].delegate == signer,
+            "expectedDelegate == signer && delegates[address(safe)][uint48(uint160(signer)].delegate == signer"
         );
     }
 
@@ -302,7 +302,7 @@ contract AllowanceModule is SignatureDecoder {
     /// @dev Allows to add a delegate.
     /// @param delegate Delegate that should be added.
     function addDelegate(address delegate) public {
-        uint48 index = uint48(delegate);
+        uint48 index = uint48(uint160(delegate));
         require(index != uint(0), "index != uint(0)");
         address currentDelegate = delegates[msg.sender][index].delegate;
         if (currentDelegate != address(0)) {
@@ -322,7 +322,7 @@ contract AllowanceModule is SignatureDecoder {
     /// @param delegate Delegate that should be removed.
     /// @param removeAllowances Indicator if allowances should also be removed. This should be set to `true` unless this causes an out of gas, in this case the allowances should be "manually" deleted via `deleteAllowance`.
     function removeDelegate(address delegate, bool removeAllowances) public {
-        Delegate memory current = delegates[msg.sender][uint48(delegate)];
+        Delegate memory current = delegates[msg.sender][uint48(uint160(delegate))];
         // Delegate doesn't exists, nothing to do
         if (current.delegate == address(0)) return;
         if (removeAllowances) {
@@ -347,7 +347,7 @@ contract AllowanceModule is SignatureDecoder {
         if (current.next != 0) {
             delegates[msg.sender][current.next].prev = current.prev;
         }
-        delete delegates[msg.sender][uint48(delegate)];
+        delete delegates[msg.sender][uint48(uint160(delegate))];
         emit RemoveDelegate(msg.sender, delegate);
     }
 
@@ -361,7 +361,7 @@ contract AllowanceModule is SignatureDecoder {
             i++;
             current = delegates[safe][current.next];
         }
-        next = uint48(current.delegate);
+        next = uint48(uint160(current.delegate));
         // Set the length of the array the number that has been used.
         // solium-disable-next-line security/no-inline-assembly
         assembly {
