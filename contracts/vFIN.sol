@@ -7,7 +7,6 @@ import {ERC20} from './external/solady/ERC20.sol';
 import {Ownable} from '../lib/openzeppelin-contracts/contracts/access/Ownable.sol';
 import {SafeCast} from './libraries/utils/SafeCast.sol';
 import {IBondFixedTermTeller} from './interfaces/bond/IBondFixedTermTeller.sol';
-import 'hardhat/console.sol';
 
 contract vFIN is ERC721, Ownable {
 
@@ -45,6 +44,7 @@ contract vFIN is ERC721, Ownable {
 
   struct VestState {
     uint32 idNext;
+    uint32 totalBurned;
     bool started;
     bool ended;
     bool withdrawn;
@@ -70,7 +70,6 @@ contract vFIN is ERC721, Ownable {
     address _tellerAddress
   ) ERC721() {
     _transferOwnership(_owner);
-    console.log(block.timestamp, vestStartTime, vestEndTime);
     finAddress = _finAddress;
     tellerAddress = _tellerAddress;
     vestState.idNext = 1;
@@ -99,13 +98,14 @@ contract vFIN is ERC721, Ownable {
 
   function exchangeBond(uint256 amount, uint32 positionId) external {
     // Checks: revert if vest not started
-    if (!vestState.started)
+    if (!vestState.started) {
       require(false, "VestingNotStarted()");
-    if (block.timestamp > vestEndTime) {
+    } else if (block.timestamp >= vestEndTime) {
       require(false, "VestingAlreadyComplete()");
+    } else if (amount == 0) {
+      require(false, "VestingZeroBonds()");
     }
     // Interactions: transfer FIN bond from user
-    console.log('erc1155 transfer');
     ERC1155(tellerAddress).safeTransferFrom(
       msg.sender,
       address(this),
@@ -113,7 +113,7 @@ contract vFIN is ERC721, Ownable {
       amount,
       bytes("")
     );
-    console.log('after erc1155 transfer');
+
     VestPosition memory vest;
 
     if (positionId == 0) {
@@ -131,7 +131,6 @@ contract vFIN is ERC721, Ownable {
 
     // calculate initial vested amount
     uint256 vestedAmount = _calculateVestedInitial(amount);
-    console.log('vested amount:', vestedAmount, block.timestamp);
                   
     if (vest.amount > 0) {
       // calculate previous vested amount 
@@ -177,6 +176,7 @@ contract vFIN is ERC721, Ownable {
     // Effects: burn NFT after full vest
     if (uint32(block.timestamp) >= vestEndTime) {
       _burn(positionId);
+      ++vestState.totalBurned;
     }
 
     // Interactions: transfer out vested amount
@@ -196,7 +196,6 @@ contract vFIN is ERC721, Ownable {
       if (redeem) {
         IBondFixedTermTeller(tellerAddress).redeem(BOND_TOKEN_ID, finBondBalance);
         ERC20(finAddress).transfer(owner, finBondBalance);
-        console.log('fin bond balance', finBondBalance);
       } else {
         ERC1155(tellerAddress).safeTransferFrom(address(this), owner, BOND_TOKEN_ID, finBondBalance, bytes(""));
       }
@@ -215,6 +214,10 @@ contract vFIN is ERC721, Ownable {
     return _calculateVestedAmount(vestPositions[positionId]);
   }
 
+  function totalSupply() external view returns (uint256 supply) {
+    return vestState.idNext - vestState.totalBurned - 1;
+  }
+
   function supportsInterface(bytes4 interfaceId)
       public
       pure
@@ -225,7 +228,7 @@ contract vFIN is ERC721, Ownable {
           interfaceId == 0x01ffc9a7 || // ERC-165 support
           interfaceId == 0x80ac58cd || // ERC-271 support
           interfaceId == 0x5b5e139f || // ERC-721Metadata support
-          interfaceId == 0xd9b67a26; // ERC-1155 support
+          interfaceId == 0xd9b67a26;   // ERC-1155 support
   }
 
   function onERC1155Received(
@@ -234,8 +237,7 @@ contract vFIN is ERC721, Ownable {
       uint256 id,
       uint256 value,
       bytes calldata data
-  ) external view returns (bytes4) {
-    console.log('1155 received');
+  ) external pure returns (bytes4) {
     operator; from; id; value; data;
     return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
   }

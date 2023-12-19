@@ -34,37 +34,6 @@ describe('vFIN Tests', function () {
         alice = hre.props.alice
         bob = hre.props.bob
         carol = hre.props.carol
-
-        // START LINEAR VEST
-
-        // mint FIN
-        let txn = await hre.props.finToken.mint(
-            hre.props.admin.address,
-            BigNumber.from(bondTotalSupply)
-        )
-        await txn.wait();
-        hre.nonce += 1;
-        
-        // approve vFIN contract
-        txn = await hre.props.finToken.approve(
-            hre.props.vFin.address,
-            BigNumber.from(bondTotalSupply)
-        )
-        await txn.wait();
-        hre.nonce += 1;
-        
-        // mint FIN token to admin
-        txn = await hre.props.vFin
-            .connect(hre.props.alice).startLinearVest()
-        await txn.wait();
-        hre.nonce += 1;
-        
-        // revert since vest already started
-        await expect(
-            hre.props.vFin
-              .connect(hre.props.admin)
-              .startLinearVest()
-        ).to.be.revertedWith('VestingAlreadyStarted()')
     })
 
     it('Should revert on onlyOwner', async function () {

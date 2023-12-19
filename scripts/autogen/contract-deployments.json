@@ -24,11 +24,29 @@
     "arb_one": {
         "finToken": {
             "contractName": "FIN",
-            "contractAddress": "0x903ca00944d0b51e50d9f4fc96167c89f211542a",
+            "contractAddress": "0x903CA00944D0b51e50D9F4fC96167c89F211542A",
             "constructorArguments": [
                 "0xf37A475c178dfbEC96088FA7904a861336002c6a"
             ],
-            "created": "2023-12-11T13:42:55.900Z"
+            "created": "2023-12-17T17:49:21.531Z"
+        },
+        "mockTeller": {
+            "contractName": "MockBondFixedTermTeller",
+            "contractAddress": "0x88b607038b944dfcedf7d5785eaabbad0d5a53ba",
+            "constructorArguments": [
+                "0x8D0AB76f8707C92E6D37D7561E35a0517AaC1Aac"
+            ],
+            "created": "2023-12-17T17:49:22.510Z"
+        },
+        "vFin": {
+            "contractName": "vFIN",
+            "contractAddress": "0xfa3e62aae5de014c4cd20377ec90eb8e59d31169",
+            "constructorArguments": [
+                "0xf37A475c178dfbEC96088FA7904a861336002c6a",
+                "0x903CA00944D0b51e50D9F4fC96167c89F211542A",
+                "0x007F7735baF391e207E3aA380bb53c4Bd9a5Fed6"
+            ],
+            "created": "2023-12-18T13:40:52.022Z"
         }
     }
 }

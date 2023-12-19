@@ -4,7 +4,8 @@ import { DeployAssist } from '../../../scripts/util/deployAssist'
 import { ContractDeploymentsKeys } from '../../../scripts/util/files/contractDeploymentKeys'
 import { ContractDeploymentsJson } from '../../../scripts/util/files/contractDeploymentsJson'
 import { FIN__factory, MockBondFixedTermTeller__factory, VFIN__factory } from '../../../typechain'
-import { ZERO_ADDRESS } from '../contracts/vfin'
+import { ZERO_ADDRESS, bondTotalSupply } from '../contracts/vfin'
+import { expect } from 'chai'
 
 // import {abi as factoryAbi} from '../../../artifacts/contracts/LimitPoolFactory.sol/LimitPoolFactory.json'
 // import { keccak256 } from 'ethers/lib/utils'
@@ -18,8 +19,9 @@ export class InitialSetup {
     private constantProductString: string
 
     /// DEPLOY CONFIG
-    private deployTokens = true
+    private deployToken = false
     private deployVesting = true
+    private deployMockTeller = false
 
     private owner = {
         'scrollSepolia': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
@@ -51,8 +53,10 @@ export class InitialSetup {
         const network = SUPPORTED_NETWORKS[hre.network.name.toUpperCase()]
 
         this.owner['hardhat']
+
+        let finTokenAddress;
         
-        if (hre.network.name == 'hardhat') {
+        if (hre.network.name == 'hardhat' || this.deployToken) {
             //TODO: read finToken from json for deployment
             console.log('deploy token', hre.network.name)
             await this.deployAssist.deployContractWithRetry(
@@ -64,12 +68,23 @@ export class InitialSetup {
                     hre.props.alice.address
                 ]
             )
+            finTokenAddress = hre.props.finToken.address
+        } else {
+            finTokenAddress = (
+                await this.contractDeploymentsJson.readContractDeploymentsJsonFile(
+                    {
+                        networkName: hre.network.name,
+                        objectName: 'finToken',
+                    },
+                    'readLimitPoolSetup'
+                )
+            ).contractAddress 
         }
 
         let tellerAddress = this.fixedTermTeller[hre.network.name]
 
-        if (hre.network.name == 'hardhat') {
-
+        if (hre.network.name == 'hardhat' || this.deployMockTeller) {
+            // deploy mock teller
             await this.deployAssist.deployContractWithRetry(
                 network,
                 //@ts-ignore
@@ -100,17 +115,53 @@ export class InitialSetup {
             hre.nonce += 1;
         }
 
-        await this.deployAssist.deployContractWithRetry(
-            network,
-            //@ts-ignore
-            VFIN__factory,
-            'vFin',
-            [
-                this.owner[hre.network.name] ?? hre.props.admin.address,
-                hre.props.finToken.address,
-                tellerAddress
-            ]
-        )
+        if (hre.network.name == 'hardhat' || this.deployVesting)
+            await this.deployAssist.deployContractWithRetry(
+                network,
+                //@ts-ignore
+                VFIN__factory,
+                'vFin',
+                [
+                    (this.deployMockTeller || hre.network.name == 'hardhat')
+                        ? hre.props.admin.address
+                        : this.owner[hre.network.name],
+                    finTokenAddress,
+                    tellerAddress
+                ]
+            )
+
+        if (hre.network.name == 'hardhat' || this.deployMockTeller) {
+            // START LINEAR VEST
+
+            // mint FIN
+            let txn = await hre.props.finToken.mint(
+                hre.props.admin.address,
+                BigNumber.from(bondTotalSupply)
+            )
+            await txn.wait();
+            hre.nonce += 1;
+            
+            // approve vFIN contract
+            txn = await hre.props.finToken.approve(
+                hre.props.vFin.address,
+                BigNumber.from(bondTotalSupply)
+            )
+            await txn.wait();
+            hre.nonce += 1;
+            
+            // mint FIN token to admin
+            txn = await hre.props.vFin
+                .connect(hre.props.alice).startLinearVest()
+            await txn.wait();
+            hre.nonce += 1;
+            
+            // revert since vest already started
+            await expect(
+                hre.props.vFin
+                .connect(hre.props.admin)
+                .startLinearVest()
+            ).to.be.revertedWith('VestingAlreadyStarted()')
+        }
 
         return hre.nonce
     }

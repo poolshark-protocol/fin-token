@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+import { ethers } from "ethers";
 
 export let ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export let BN_ZERO = BigNumber.from('0')
