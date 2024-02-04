@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity 0.8.18;
 
-import "./Enum.sol";
-import "./SignatureDecoder.sol";
+import "../safe/common/Enum.sol";
+import "../safe/common/SignatureDecoder.sol";
 
 interface GnosisSafe {
     /// @dev Allows a Module to execute a Safe transaction without any further confirmations.

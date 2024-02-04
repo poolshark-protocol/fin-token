@@ -2,17 +2,19 @@ export enum SUPPORTED_NETWORKS {
     /* Local Supported Networks */
     HARDHAT = 'hardhat',
 
-    /* Testnet Supported  Networks */
-    GOERLI = 'goerli',
-    ARB_GOERLI = 'arb_goerli',
+    /* Mainnet Supported  Networks */
     ARB_ONE = 'arb_one',
-    SCROLLSEPOLIA = 'scrollSepolia'
+    SCROLL = 'scroll',
+    MODE = 'mode',
+
+    /* Testnet Supported  Networks */
+    ARB_SEPOLIA = 'arb_sepolia',
+    SCROLL_SEPOLIA = 'scrollSepolia',
 }
 
 export enum TESTNET_NETWORKS {
-    GOERLI = 'goerli',
-    ARB_GOERLI = 'arb_goerli',
-    SCROLLSEPOLIA = 'scrollSepolia'
+    ARB_SEPOLIA = 'arb_sepolia',
+    SCROLL_SEPOLIA = 'scrollSepolia'
 }
 
 export enum LOCAL_NETWORKS {

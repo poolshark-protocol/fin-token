@@ -3,7 +3,7 @@ import { SUPPORTED_NETWORKS } from '../../../scripts/constants/supportedNetworks
 import { DeployAssist } from '../../../scripts/util/deployAssist'
 import { ContractDeploymentsKeys } from '../../../scripts/util/files/contractDeploymentKeys'
 import { ContractDeploymentsJson } from '../../../scripts/util/files/contractDeploymentsJson'
-import { FIN__factory, MockBondFixedTermTeller__factory, VFIN__factory } from '../../../typechain'
+import { AllowanceModule__factory, FIN__factory, MockBondFixedTermTeller__factory, ModuleManager__factory, VFIN__factory } from '../../../typechain'
 import { ZERO_ADDRESS, bondTotalSupply } from '../contracts/vfin'
 import { expect } from 'chai'
 
@@ -19,14 +19,15 @@ export class InitialSetup {
     private constantProductString: string
 
     /// DEPLOY CONFIG
-    private deployToken = false
-    private deployVesting = true
+    private deployToken = true
+    private deployVesting = false
     private deployMockTeller = false
 
     private owner = {
         'scrollSepolia': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'arb_goerli': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'arb_one': '0xf37A475c178dfbEC96088FA7904a861336002c6a',
+        'mode': '0x5e2656F87f09503B5343480627934B07cB194a65'
     }
 
     private fixedTermTeller = {
@@ -52,12 +53,9 @@ export class InitialSetup {
     public async initialFinTokenSetup(): Promise<number> {
         const network = SUPPORTED_NETWORKS[hre.network.name.toUpperCase()]
 
-        this.owner['hardhat']
-
         let finTokenAddress;
         
         if (hre.network.name == 'hardhat' || this.deployToken) {
-            //TODO: read finToken from json for deployment
             console.log('deploy token', hre.network.name)
             await this.deployAssist.deployContractWithRetry(
                 network,
@@ -65,7 +63,7 @@ export class InitialSetup {
                 FIN__factory,
                 'finToken',
                 [
-                    hre.props.alice.address
+                    this.owner[hre.network.name] ?? hre.props.alice.address
                 ]
             )
             finTokenAddress = hre.props.finToken.address
@@ -80,6 +78,8 @@ export class InitialSetup {
                 )
             ).contractAddress 
         }
+
+        return
 
         let tellerAddress = this.fixedTermTeller[hre.network.name]
 

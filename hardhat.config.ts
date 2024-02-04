@@ -39,40 +39,79 @@ const config: HardhatUserConfig = {
             accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
             timeout: 60000,
         },
+        arb_sepolia: {
+            chainId: 421614,
+            gasPrice: 15_000_000_000,
+            url: process.env.ARBITRUM_SEPOLIA_URL || '',
+            accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+            timeout: 60000,
+        },
         arb_one: {
             chainId: 42161,
             url: process.env.ARBITRUM_ONE_URL || '',
             accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
             timeout: 60000,
         },
+        scroll: {
+            chainId: 534352,
+            gasPrice: 640_000_000,
+            url: process.env.SCROLL_URL || "",
+            accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+        },
         scrollSepolia: {
             chainId: 534351,
+            gasPrice: 2_000_000_000,
             url: "https://sepolia-rpc.scroll.io/" || "",
-            gasPrice: 1_500_000_000,
             accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
         },
-        op_goerli: {
-            chainId: 420,
-            gasPrice: 500,
-            url: process.env.OPTIMISM_GOERLI_URL || '',
+        mode: {
+            chainId: 34443,
+            gasPrice: 1_600_000_000,
+            url: "https://mainnet.mode.network/" || "",
             accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-            timeout: 60000,
-        },
+        }
     },
     etherscan: { 
         apiKey: {
-            arbitrumGoerli: process.env.ARBITRUM_GOERLI_API_KEY,
-            scrollSepolia: process.env.SCROLLSEPOLIA_API_KEY,
             arbitrumOne: process.env.ARBITRUM_ONE_API_KEY,
+            arbitrumGoerli: process.env.ARBITRUM_GOERLI_API_KEY,
+            arb_sepolia: process.env.ARBITRUM_SEPOLIA_API_KEY,
+            scrollSepolia: process.env.SCROLL_SEPOLIA_API_KEY,
+            scroll: process.env.SCROLL_API_KEY,
+            mode: process.env.MODE_API_KEY
         },
         customChains: [
             {
               network: 'scrollSepolia',
               chainId: 534351,
               urls: {
-                apiURL: 'https://api-sepolia.scrollscan.dev/api',
-                browserURL: 'https://api-sepolia.scrollscan.dev',
+                apiURL: 'https://api-sepolia.scrollscan.com/api',
+                browserURL: 'https://sepolia.scrollscan.com/',
               },
+            },
+            {
+                network: 'scroll',
+                chainId: 534352,
+                urls: {
+                  apiURL: 'https://blockscout.scroll.io/api',
+                  browserURL: 'https://blockscout.scroll.io/',
+                },
+            },
+            {
+                network: 'mode',
+                chainId: 34443,
+                urls: {
+                  apiURL: 'https://explorer.mode.network/api',
+                  browserURL: 'https://explorer.mode.network/',
+                },
+            },
+            {
+                network: 'arb_sepolia',
+                chainId: 421614,
+                urls: {
+                  apiURL: 'https://api-sepolia.arbiscan.io/api',
+                  browserURL: 'https://sepolia.arbiscan.io/',
+                },
             },
         ],
     },

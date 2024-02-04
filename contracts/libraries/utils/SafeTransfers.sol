@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity 0.8.18;
 
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import '../../external/solady/ERC20.sol';
 
 library SafeTransfers {
     /**
@@ -26,7 +26,7 @@ library SafeTransfers {
             return;
         }
         if (amount == 0) return;
-        IERC20 erc20Token = IERC20(token);
+        ERC20 erc20Token = ERC20(token);
         // ? We are checking the transfer, but since we are doing so in an assembly block
         // ? Slither does not pick up on that and results in a hit
         // slither-disable-next-line unchecked-transfer
@@ -67,8 +67,8 @@ library SafeTransfers {
             if (msg.value < amount) require(false, 'SafeTransfers::LowEthAmountSent()');
             return amount;
         }
-        IERC20 erc20Token = IERC20(token);
-        uint256 balanceBefore = IERC20(token).balanceOf(address(this));
+        ERC20 erc20Token = ERC20(token);
+        uint256 balanceBefore = ERC20(token).balanceOf(address(this));
 
         /// @dev - msg.sender here is the pool
         erc20Token.transferFrom(sender, msg.sender, amount);
@@ -93,7 +93,7 @@ library SafeTransfers {
         if (!success) require(false, 'TransferFailed(msg.sender, address(this)');
 
         // Calculate the amount that was *actually* transferred
-        uint256 balanceAfter = IERC20(token).balanceOf(address(this));
+        uint256 balanceAfter = ERC20(token).balanceOf(address(this));
 
         return balanceAfter - balanceBefore; // underflow already checked above, just subtract
     }
