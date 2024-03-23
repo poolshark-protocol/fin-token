@@ -5,7 +5,7 @@ import "../external/solady/ERC20.sol";
 
 contract TimeswapLenderAirdrop {
 
-    address public immutable usdc = 0xaf88d065e77c8cC2239327C5EDb3A432268e5831;
+    uint8 public constant lenderCount = 48;
 
     struct AirdropData {
         address lender;
@@ -15,17 +15,14 @@ contract TimeswapLenderAirdrop {
     struct AirdropLocals {
         ERC20 token;
         uint256 totalAmount;
-        uint256 tokenBalance;
     }
-
-    constructor() {}
 
     function executeAirdrop(
         address airdropToken,
         uint256 airdropAmount
     ) external {
         AirdropLocals memory locals;
-        AirdropData[] memory data = new AirdropData[](49);
+        AirdropData[] memory data = new AirdropData[](lenderCount);
         data = getLenderData();
 
         for (uint256 i; i < data.length; ) {
@@ -52,7 +49,7 @@ contract TimeswapLenderAirdrop {
     function getLenderData() private pure returns (
         AirdropData[] memory data
     ) {
-        data = new AirdropData[](48);
+        data = new AirdropData[](lenderCount);
 
         data[0] = AirdropData(
             {
