@@ -1,0 +1,288 @@
+{
+    "0x000000e28fAA823d5B53ff6C2922c28335840375": {
+        "positionAmount": 3011015817,
+        "lendTokenAmount": 3000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x3829d194bb8d0f55f617bacf9670a63376961796fb16a50533adc57fb497fce0"
+        ]
+    },
+    "0x0CB63719D7fbB807f82423ca42Cc3506a5AEDc10": {
+        "positionAmount": 434133834,
+        "lendTokenAmount": 431.0
+    },
+    "0x10b0000Bb4B7a07ab03f2d1da71A505B41F2BFB5": {
+        "positionAmount": 4039,
+        "lendTokenAmount": 0.003855
+    },
+    "0x11B2f51DdeB69AE9E1Fb883Bfb2A4c9c67343a73": {
+        "positionAmount": 482859606,
+        "lendTokenAmount": 300.0
+    },
+    "0x1E48bceb74E3483ff6A3BBdb90C6AC8C11352A67": {
+        "positionAmount": 308621682,
+        "lendTokenAmount": 306.653052
+    },
+    "0x1c0A79ac5bD3315d7af05B5BEF2d0521dD86B53B": {
+        "positionAmount": 123557098,
+        "lendTokenAmount": 120.0
+    },
+    "0x225BBDf071c6800f1E5C8682088eC66f56D56A78": {
+        "positionAmount": 2219895671,
+        "lendTokenAmount": 2177.05424,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0xc789508cbd234cfaa88a282e3ae989cbee917138320ec2d4d869f1a7145ac8e7",
+            "https://arbiscan.io/tx/0x8c6fefe5d088113402a0c68a893caea5c2475b04e4a7eac77cd912672cfb1f7c",
+            "https://arbiscan.io/tx/0xbd70361621b360dc67a7c94b0413b525e2488a44e88533438051392f5928a374"
+        ]
+    },
+    "0x2e84B79dd9773d712f9D20a98C4ee76541B9533D": {
+        "positionAmount": 1821616285,
+        "lendTokenAmount": 1786.145562,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x2d04018e12ba9fa21ad609f8ac83f904b9a8c9922c7af04a80ced08da779a621"
+        ]
+    },
+    "0x333101cc3C175Fb414989CD0477a0258Ee0E2cae": {
+        "positionAmount": 10073136140,
+        "lendTokenAmount": 10000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x73586e387161579365f33e7d192dc224089f02e8cbbf53a099e54dafd96913b7"
+        ]
+    },
+    "0x338e76D66eF221c46Ab95A703b52B270C747D200": {
+        "positionAmount": 7364752026,
+        "lendTokenAmount": 6598.255384,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x54c31ebfe18dd24b5f5c69b866cb96b11815cdffc32dcab1ce384632e1db50b1",
+            "https://arbiscan.io/tx/0x084a5097f76f0c497d2104a8fc497582ef72641b945cf87dde8ac44899545446"
+        ]
+    },
+    "0x362379c21e2b23075E6B0e36a7ed3dE280C0b923": {
+        "positionAmount": 629490468,
+        "lendTokenAmount": 586.598153,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x6496383d5db64ebd3f49b9cbef228253084ba5e11cc37040cf327162199191e8",
+            "https://arbiscan.io/tx/0x2f1524f49f9dd844096794f5c4538f4b961433794dd09527a06f7d0593841b1a"
+        ]
+    },
+    "0x3890a0Cc0bDBBf7dd7904A199c87a788da85BE62": {
+        "positionAmount": 100319379,
+        "lendTokenAmount": 100.0
+    },
+    "0x3AE1352DD34Fe199212e1D4E946726299227F480": {
+        "positionAmount": 2803386209,
+        "lendTokenAmount": 2797.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x285db7bcbb4950b46a006c651e1863a74d848e407adf440435ff1c7379c56f5f"
+        ]
+    },
+    "0x3E09D20Ea54b2D261b4E793d69a39f2c1Dcb6dd8": {
+        "positionAmount": 154892692,
+        "lendTokenAmount": 150.9
+    },
+    "0x407D6A41A7C2c18d735402F057A5D7469EC6c8d4": {
+        "positionAmount": 2355594756,
+        "lendTokenAmount": 2310.296831,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x7da3b66a6b6fe8d689cda18fc02dbaa2ed47b6caf9a2c28d7759f4d1c4324cb9"
+        ]
+    },
+    "0x41cB15f15C3438D465BC58B2A689b29fe68F1415": {
+        "positionAmount": 1023709969,
+        "lendTokenAmount": 1000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x9ad50e736cdca8ce5acbbc24bb04ca56e3eaa3b058aac40d18d79ce57244ad4d"
+        ]
+    },
+    "0x47E05bB20A14C9a27fa8706Af83Fff7a480de47F": {
+        "positionAmount": 2593838016,
+        "lendTokenAmount": 2541.773593,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0xf77491f433a69365e732c5bf87187754d52b385053057b16e132f1ac226ff37d"
+        ]
+    },
+    "0x4ec744F218397F315EE4AB53A49D3D33019BfD05": {
+        "positionAmount": 3813797810,
+        "lendTokenAmount": 3695.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0xd6d6332f9e6d40c18e4082b9dcd702f34e6f74ed38cf05c2d265c72cc2ce7b85",
+            "https://arbiscan.io/tx/0xf46deb1323f7551d0fe9192c6475ce368bd6eeb6530db51ffc3f27e8448749fa"
+        ]
+    },
+    "0x505A46C88Ae9FAdc438934bB8Cc6AdC026d4B1Af": {
+        "positionAmount": 2045703955,
+        "lendTokenAmount": 2000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x328cd9e3e2538d1bf9d33b62e86611f13cc624ecc9212162e577f05b36815fc4"
+        ]
+    },
+    "0x5697CE38fce437fb0510839047Cbe00174923Bb2": {
+        "positionAmount": 665848820,
+        "lendTokenAmount": 656.146193
+    },
+    "0x5F5AF1C426F5F24296E9bbB76d2D15531aa660E6": {
+        "positionAmount": 52084,
+        "lendTokenAmount": 0.05
+    },
+    "0x602695c0A8AB763A4823a07E3f40AbF0D251b671": {
+        "positionAmount": 593511023,
+        "lendTokenAmount": 200.0
+    },
+    "0x62EE13473EB1F771C3788f70ea988499A6008881": {
+        "positionAmount": 511902334,
+        "lendTokenAmount": 499.932277
+    },
+    "0x635681E0B420198F03Cbcc4026eFa66Af3f5fb40": {
+        "positionAmount": 1013556271,
+        "lendTokenAmount": 1000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x5e100cd0a67f64d031d3ccbb8baac65490f0ea4e9ff3450d2c3f6136edaee88e"
+        ]
+    },
+    "0x6586185c2b16E620db0Ab02e7Fca0c66DeE7C9Ea": {
+        "positionAmount": 5122680221,
+        "lendTokenAmount": 5108.994426,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x425e7c8864bc6558bbd0303565de7c1cebd0352ce04fc13f2d1b37838bb326eb",
+            "https://arbiscan.io/tx/0xd6bdc8150f96e8a0a64cc38b953b4ebcb116644ed90e5bffe709e6a93001d195"
+        ]
+    },
+    "0x74e142df816C376bd35d7AE02914fC8168Fcd45f": {
+        "positionAmount": 924561274,
+        "lendTokenAmount": 708.737652
+    },
+    "0x7e34dDEf646E03E414e74fA8eC5d9D13e994AB8e": {
+        "positionAmount": 132841889,
+        "lendTokenAmount": 40.0
+    },
+    "0x893A83F5521001559883CB9682B15439C023E54f": {
+        "positionAmount": 2037256501,
+        "lendTokenAmount": 2000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x8a2e939260639fa65d8a2772a5d0226a89d4b3d5211d2272882a26e353060edd"
+        ]
+    },
+    "0x8e2F7D5aAAE5ABbD5052aCb74019b9b11cb74349": {
+        "positionAmount": 5532669880,
+        "lendTokenAmount": 2078.464586,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x3829d194bb8d0f55f617bacf9670a63376961796fb16a50533adc57fb497fce0"
+        ]
+    },
+    "0x905DEAFB182b9F6B4d289822306C3CfdD6F40D54": {
+        "positionAmount": 2192378306,
+        "lendTokenAmount": 2000.884055,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0xe8db58a869413e93321bf595b3ea82eb72e444df4dbb3bd49551106d1b5ce280"
+        ]
+    },
+    "0x9214aF6d0d3075c92e3A98D67e910488b185ae5F": {
+        "positionAmount": 56089145,
+        "lendTokenAmount": 52.01
+    },
+    "0x972b0F9cDE1266e860E546ac92E783741769400F": {
+        "positionAmount": 3316282298,
+        "lendTokenAmount": 2000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x873d144866b11bb45c0b88e726bc93272ea356ac4ac11fa35d42d7659ad7b290"
+        ]
+    },
+    "0x9EAc3aCad64eE65122f267e58734A634f2062c3F": {
+        "positionAmount": 11684997,
+        "lendTokenAmount": 11.487133
+    },
+    "0x9c0D1F4a029c46265831D120DeE9CDc72F0aB3C3": {
+        "positionAmount": 8974370159,
+        "lendTokenAmount": 8016.644236,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x7e9812d92d3cf1b08511756169fade552a4f8802fa297c9f951c926c49478abc",
+            "https://arbiscan.io/tx/0x1d9a1264a9a5c9043084ac66d41898d2258a561da654562995ed60dd3bc3bb7e",
+            "https://arbiscan.io/tx/0xcadb6907f2357d77358a55c54e67b7563f012b29957fbc80da6e5195e64399c2",
+            "https://arbiscan.io/tx/0x7836090b330b1b7622bcd2763657c64f0c2a21bc69239ae1e0faccf88838aa4d",
+            "https://arbiscan.io/tx/0xb7c1d2c9ac683ed7cebfa60716ca07d24c29a2880c3b20eccc3378c91efbe08c"
+        ]
+    },
+    "0xA0F4A4CD9312EA26Ee0CB6B3E9e92C3BfA33ad1A": {
+        "positionAmount": 7198115483,
+        "lendTokenAmount": 7072.026062,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0xede585fe9d9bc02f5a7bd41e0f42c281c8e6ad4be5bd396f28535ff2f91c7d7b"
+        ]
+    },
+    "0xBe905f486a5AFC311EEF5cca184FaB073c3978fc": {
+        "positionAmount": 3006006656,
+        "lendTokenAmount": 2999.2,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x5a9dd42dcf2b8736e2ba100aaa4dad7cf03ba99d7cfe0c69bb4b752157716948"
+        ]
+    },
+    "0xC2CA3C901c9EB1aB207fcDAc01a8c936AB48cDd4": {
+        "positionAmount": 721262282,
+        "lendTokenAmount": 701.827821
+    },
+    "0xCb06a3A0a30363229Fccdcc8401679C9AB542cD9": {
+        "positionAmount": 4669323791,
+        "lendTokenAmount": 500.286773
+    },
+    "0xCcdeaBe485054a996E2Cc6A1706A4727CF21286B": {
+        "positionAmount": 13930990751,
+        "lendTokenAmount": 13784.038598,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x97cc5fe303391e46a2cb3ac759f5dd49ca63be1b6ffc87d34b1590b824a7ef42",
+            "https://arbiscan.io/tx/0xfcbf8895741783bdc7ac2d073391e5e0ace7268a817bb86ef0563a24427063f8"
+        ]
+    },
+    "0xEd3Faf019BA00f4FA615eb3A4b0dD320c96323f7": {
+        "positionAmount": 5118477349,
+        "lendTokenAmount": 5000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0xc1808861bc5dab5dd7edc9782fa1e2e9d2239163217eb15c4522e3f74fa1d845"
+        ]
+    },
+    "0xEea019eD82A9fE1574C874Cf91b8323BE17b2Ce3": {
+        "positionAmount": 279261516,
+        "lendTokenAmount": 274.204256
+    },
+    "0xa15AAF9B9a85652CC7CD7fdA9f85e6404B806a50": {
+        "positionAmount": 13245792950,
+        "lendTokenAmount": 13070.241974,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x2bf81a9bb04eb8d24d473363d86b85668694a769f5af8723d71cfb74e6da1764",
+            "https://arbiscan.io/tx/0x35f410a93145d80a3207f3c2c82ce72c038dce99c23b0e983ab327090e1b7946",
+            "https://arbiscan.io/tx/0x7ac8de4c12f83c0f485ba9d469fed7211411beac20b2ce6868f2d068e6c31b19"
+        ]
+    },
+    "0xa3301C1654895fCC8853BD622D0A43e7789706f7": {
+        "positionAmount": 302456444,
+        "lendTokenAmount": 301.294118
+    },
+    "0xa8c2D5698334DcDCbBb04f25C5Bc8D8301A9A660": {
+        "positionAmount": 3786853902,
+        "lendTokenAmount": 3587.360431,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x84e535d37bf152341113d63404af2302a92672840cbf796f89c2be341ea094ce"
+        ]
+    },
+    "0xaC88c8316c57253a16f482AEB0879020BE87DB25": {
+        "positionAmount": 11227642260,
+        "lendTokenAmount": 11000.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0x5765582a16aa80f3d218e03d862109d5d53ecca9bc29924c168765b20b79478f"
+        ]
+    },
+    "0xc27e87cfe1fd2Ed6F43DFfFBb9E9e46428497a24": {
+        "positionAmount": 12319627589,
+        "lendTokenAmount": 12045.0,
+        "txnHashes": [
+            "https://arbiscan.io/tx/0xbbe421de69a9461e86192274f7c85e9afb3433d998f0ffdcc849720349ef8db2"
+        ]
+    },
+    "0xd6c54048e837b1924973F792aB01EBb7f6d45173": {
+        "positionAmount": 10887381,
+        "lendTokenAmount": 10.535352
+    },
+    "0xeB38dC66ef461fAe07F4cD2C49160aaBC584C82b": {
+        "positionAmount": 392692897,
+        "lendTokenAmount": 385.37
+    }
+}

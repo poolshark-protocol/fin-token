@@ -1,7 +1,7 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { getNonce } from '../../../tasks/utils'
 import {
-    FIN, MockBondFixedTermTeller, VFIN,
+    FIN, MockBondFixedTermTeller, TgeDeploy, VFIN,
 } from '../../../typechain'
 import { InitialSetup } from './initialSetup'
 
@@ -10,6 +10,7 @@ export interface BeforeEachProps {
     finToken: FIN
     vFin: VFIN
     mockTeller: MockBondFixedTermTeller
+    tgeDeploy: TgeDeploy
     admin: SignerWithAddress
     alice: SignerWithAddress
     bob: SignerWithAddress
@@ -42,6 +43,7 @@ export class GetBeforeEach {
         let finToken: FIN
         let vFin: VFIN
         let mockTeller: MockBondFixedTermTeller
+        let tgeDeploy: TgeDeploy
         let admin: SignerWithAddress
         let alice: SignerWithAddress
         let bob: SignerWithAddress
@@ -52,6 +54,7 @@ export class GetBeforeEach {
             finToken,
             vFin,
             mockTeller,
+            tgeDeploy,
             admin,
             alice,
             bob,

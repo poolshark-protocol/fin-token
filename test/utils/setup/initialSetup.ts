@@ -3,7 +3,7 @@ import { SUPPORTED_NETWORKS } from '../../../scripts/constants/supportedNetworks
 import { DeployAssist } from '../../../scripts/util/deployAssist'
 import { ContractDeploymentsKeys } from '../../../scripts/util/files/contractDeploymentKeys'
 import { ContractDeploymentsJson } from '../../../scripts/util/files/contractDeploymentsJson'
-import { AllowanceModule__factory, FIN__factory, MockBondFixedTermTeller__factory, ModuleManager__factory, VFIN__factory } from '../../../typechain'
+import { AllowanceModule__factory, FIN__factory, MockBondFixedTermTeller__factory, ModuleManager__factory, TgeDeploy__factory, VFIN__factory } from '../../../typechain'
 import { ZERO_ADDRESS, bondTotalSupply } from '../contracts/vfin'
 import { expect } from 'chai'
 
@@ -22,10 +22,11 @@ export class InitialSetup {
     private deployToken = true
     private deployVesting = false
     private deployMockTeller = false
+    private deployTge = true
 
     private owner = {
         'scrollSepolia': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
-        'arb_goerli': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
+        'arb_sepolia': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
         'arb_one': '0xf37A475c178dfbEC96088FA7904a861336002c6a',
         'mode': '0x5e2656F87f09503B5343480627934B07cB194a65'
     }
@@ -54,7 +55,19 @@ export class InitialSetup {
         const network = SUPPORTED_NETWORKS[hre.network.name.toUpperCase()]
 
         let finTokenAddress;
-        
+        let ownerAddress = this.owner[hre.network.name] ?? hre.props.alice.address
+
+        if (this.deployTge) {
+            await this.deployAssist.deployContractWithRetry(
+                network,
+                //@ts-ignore
+                TgeDeploy__factory,
+                'tgeDeploy',
+                []
+            )
+            ownerAddress = hre.props.tgeDeploy.address
+        }
+
         if (hre.network.name == 'hardhat' || this.deployToken) {
             console.log('deploy token', hre.network.name)
             await this.deployAssist.deployContractWithRetry(
@@ -63,7 +76,7 @@ export class InitialSetup {
                 FIN__factory,
                 'finToken',
                 [
-                    this.owner[hre.network.name] ?? hre.props.alice.address
+                    ownerAddress
                 ]
             )
             finTokenAddress = hre.props.finToken.address
@@ -79,7 +92,46 @@ export class InitialSetup {
             ).contractAddress 
         }
 
-        return
+        if (this.deployTge) {
+            const poolRouterAddress = (
+                await this.contractDeploymentsJson.readContractDeploymentsJsonFile(
+                    {
+                        networkName: hre.network.name,
+                        objectName: 'poolRouter',
+                    },
+                    'readLimitPoolSetup'
+                )
+            ).contractAddress
+            const rangeStakerAddress = (
+                await this.contractDeploymentsJson.readContractDeploymentsJsonFile(
+                    {
+                        networkName: hre.network.name,
+                        objectName: 'rangeStaker',
+                    },
+                    'readLimitPoolSetup'
+                )
+            ).contractAddress 
+            const limitStakerAddress = (
+                await this.contractDeploymentsJson.readContractDeploymentsJsonFile(
+                    {
+                        networkName: hre.network.name,
+                        objectName: 'limitStaker',
+                    },
+                    'readLimitPoolSetup'
+                )
+            ).contractAddress
+            const executeTxn = await hre.props.tgeDeploy.execute(
+                this.owner[hre.network.name] ?? hre.props.alice.address,
+                poolRouterAddress,
+                finTokenAddress,
+                rangeStakerAddress,
+                limitStakerAddress
+            )
+            await executeTxn.wait();
+            hre.nonce += 1;
+        }
+
+        return hre.nonce
 
         let tellerAddress = this.fixedTermTeller[hre.network.name]
 

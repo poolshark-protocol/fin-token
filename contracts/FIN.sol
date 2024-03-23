@@ -57,11 +57,11 @@ contract FIN is ERC20, Ownable {
     
   /// @dev Returns the name of the token.
   function name() public pure override returns (string memory) {
-      return 'Poolshark TEST';
+      return 'Poolshark';
   }
 
   /// @dev Returns the symbol of the token.
   function symbol() public pure override returns (string memory) {
-      return 'testFIN';
+      return 'FIN';
   }
 }
