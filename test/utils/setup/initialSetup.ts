@@ -3,7 +3,7 @@ import { SUPPORTED_NETWORKS } from '../../../scripts/constants/supportedNetworks
 import { DeployAssist } from '../../../scripts/util/deployAssist'
 import { ContractDeploymentsKeys } from '../../../scripts/util/files/contractDeploymentKeys'
 import { ContractDeploymentsJson } from '../../../scripts/util/files/contractDeploymentsJson'
-import { AllowanceModule__factory, FIN__factory, MockBondFixedTermTeller__factory, ModuleManager__factory, TgeDeploy__factory, VFIN__factory } from '../../../typechain'
+import { AllowanceModule__factory, FINLenderAirdrop__factory, FIN__factory, MockBondFixedTermTeller__factory, ModuleManager__factory, TgeDeploy__factory, VFIN__factory } from '../../../typechain'
 import { ZERO_ADDRESS, bondTotalSupply } from '../contracts/vfin'
 import { expect } from 'chai'
 
@@ -19,10 +19,11 @@ export class InitialSetup {
     private constantProductString: string
 
     /// DEPLOY CONFIG
-    private deployToken = true
+    private deployToken = false
     private deployVesting = false
     private deployMockTeller = false
-    private deployTge = true
+    private deployTge = false
+    private deployAirdrop = true
 
     private owner = {
         'scrollSepolia': '0xBd5db4c7D55C086107f4e9D17c4c34395D1B1E1E',
@@ -56,6 +57,16 @@ export class InitialSetup {
 
         let finTokenAddress;
         let ownerAddress = this.owner[hre.network.name] ?? hre.props.alice.address
+
+        if (this.deployAirdrop) {
+            await this.deployAssist.deployContractWithRetry(
+                network,
+                //@ts-ignore
+                FINLenderAirdrop__factory,
+                'finLenderAirdrop',
+                []
+            )
+        }
 
         if (this.deployTge) {
             await this.deployAssist.deployContractWithRetry(

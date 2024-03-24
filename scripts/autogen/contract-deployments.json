@@ -69,6 +69,12 @@
             "contractAddress": "0x6475b161449a2a7c5ac5ba7b5f272e1d9c883ea2",
             "constructorArguments": [],
             "created": "2023-12-19T20:28:42.401Z"
+        },
+        "finLenderAirdrop": {
+            "contractName": "FINLenderAirdrop",
+            "contractAddress": "0x6cc9f7514a3c874ab0157268e1ee5c1e89dc823d",
+            "constructorArguments": [],
+            "created": "2024-03-24T13:01:04.626Z"
         }
     },
     "arb_sepolia": {

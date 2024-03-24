@@ -2,11 +2,11 @@ import { ContractDeploymentsKey } from '../util/files/contractDeploymentsJson'
 
 export const CONTRACT_DEPLOYMENT_KEYS: ContractDeploymentsKey[] = [
     {
-        networkName: 'mode',
-        objectName: 'tgeDeploy'
+        networkName: 'arb_one',
+        objectName: 'finLenderAirdrop'
     },
     {
-        networkName: 'mode',
-        objectName: 'finToken'
+        networkName: 'arb_one',
+        objectName: 'finLenderAirdrop'
     },
 ];

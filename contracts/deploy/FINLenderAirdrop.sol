@@ -3,7 +3,7 @@ pragma solidity 0.8.18;
 
 import "../external/solady/ERC20.sol";
 
-contract TimeswapLenderAirdrop {
+contract FINLenderAirdrop {
 
     uint8 public constant lenderCount = 48;
 
@@ -46,7 +46,7 @@ contract TimeswapLenderAirdrop {
         }
     }
 
-    function getLenderData() private pure returns (
+    function getLenderData() public pure returns (
         AirdropData[] memory data
     ) {
         data = new AirdropData[](lenderCount);
